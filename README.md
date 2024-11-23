@@ -39,15 +39,15 @@ PRISMATIC addresses this critical need by:
   - Leverages dynamic learning to improve suggestions based on interactions.
 
 ## Advantages of PRISMATIC
- **Comprehensive Privacy Protection:** Ensures secure sharing by redacting sensitive information across audio, text, images, and captions.
- **Enhanced User Engagement:** Delivers personalized suggestions to make posts interactive and appealing.
- **Seamless Integration:** Uses advanced tools like **FastAPI** and **Pydantic** for efficient data handling and content recommendations.
+ - **Comprehensive Privacy Protection:** Ensures secure sharing by redacting sensitive information across audio, text, images, and captions.
+ - **Enhanced User Engagement:** Delivers personalized suggestions to make posts interactive and appealing.
+ - **Seamless Integration:** Uses advanced tools like **FastAPI** and **Pydantic** for efficient data handling and content recommendations.
 
 ## Technologies Used
- **Backend:** FastAPI, Pydantic
- **AI Tools:** LlamaIndex, Ollama cpp
- **Security:** Advanced encryption standards
- **User Experience:** Intuitive design with real-time feedback
+- **Backend:** FastAPI, Pydantic
+- **AI Tools:** LlamaIndex, Ollama cpp
+- **Security:** Advanced encryption standards
+- **User Experience:** Intuitive design with real-time feedback
 
 ## License
 This project is licensed under the GNU GENERAL PUBLIC LICENSE. 
