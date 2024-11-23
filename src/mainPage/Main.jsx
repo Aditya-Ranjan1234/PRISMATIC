@@ -1,5 +1,5 @@
 import React from "react";
-import "../../public/Main.css";
+import "../public/Main.css";
 import Uploader from "./Uploader";
 import RandomIcons from "../../src/RandomIcons";
 
