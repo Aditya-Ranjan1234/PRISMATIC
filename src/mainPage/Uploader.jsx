@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import "../styles/Uploader.css";
+import "../../public/Uploader.css";
 
 function Uploader() {
   const [files, setFiles] = useState([]);
@@ -37,18 +37,6 @@ function Uploader() {
         return (prevIndex - 1 + files.length) % files.length;
       }
     });
-  };
-
-  const handleWheelScroll = (e) => {
-    e.preventDefault();
-    if (Math.abs(e.deltaY) > 0) {
-      const reducedDelta = e.deltaY / 2;
-      if (reducedDelta > 0) {
-        scrollImages("right");
-      } else {
-        scrollImages("left");
-      }
-    }
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -101,14 +89,26 @@ function Uploader() {
             )}
           </div>
         )}
-        <div className="image-container" onWheel={handleWheelScroll}>
+        <div className="image-container">
           {files.length > 0 && (
             <div className="image-item main">
+              <button
+                className="arrow-button left"
+                onClick={() => scrollImages("left")}
+              >
+                &#8249;
+              </button>
               <img
                 src={files[currentIndex].preview}
                 alt={`file preview ${currentIndex}`}
                 className="image-preview"
               />
+              <button
+                className="arrow-button right"
+                onClick={() => scrollImages("right")}
+              >
+                &#8250;
+              </button>
               <div className="image-description-container">
                 <div className="prompt-text">
                   {imageDescription || "Image Description"}
