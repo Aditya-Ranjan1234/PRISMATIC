@@ -49,30 +49,30 @@ function Uploader() {
   };
 
   const handleAnalyzeClick = async () => {
-    if (files.length > 0) {
-      const currentFile = files[currentIndex];
-      const formData = new FormData();
-      formData.append("image", currentFile);
-      formData.append("prompt", userPrompt);
+  if (files.length > 0) {
+    const currentFile = files[currentIndex];
+    const formData = new FormData();
+    formData.append("file", currentFile); 
+    formData.append("context", userPrompt || "Analyze the image and provide feedback."); 
 
-      try {
-        const response = await fetch("http://localhost:11400/api/llama", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            image: currentFile.preview,
-            prompt: userPrompt || "Analyze the image and provide feedback.",
-          }),
-        });
-        const data = await response.json();
-        setImageDescription(data.description || "No description available.");
-      } catch (error) {
-        console.error("Error sending image to the server", error);
+    try {
+      const response = await fetch("http://localhost:8000/analyze-image", {
+        method: "POST",
+        body: formData, 
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
       }
+
+      const data = await response.json();
+      setImageDescription(data.description || "No description available.");
+    } catch (error) {
+      console.error("Error sending image to the server", error);
+      setImageDescription("Failed to analyze the image.");
     }
-  };
+  }
+};
 
   return (
     <div className="Uploader">
