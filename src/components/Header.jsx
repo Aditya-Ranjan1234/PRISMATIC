@@ -11,7 +11,7 @@ function Header() {
     <header className="d-flex flex-wrap align-items-center justify-content-between py-3 mb-3 Header">
       <RandomIcons />
       <div className="col-md-5 mb-2 mb-md-0 text-left">
-        <h1 className="text-white">SnapSafe</h1>
+        <h1 className="text-white">PRISMATIC</h1>
       </div>
       <div className="dropdown d-md-none">
         <button
