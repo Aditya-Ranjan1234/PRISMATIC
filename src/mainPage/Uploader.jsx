@@ -9,6 +9,7 @@ function Uploader() {
   const [userPrompt, setUserPrompt] = useState("");
   const [imageDescription, setImageDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const BASE_API_URL = "c3f6-2401-4900-900b-1eb8-2982-6f91-923e-1997.ngrok-free.app"; 
 
   const onDrop = useCallback((acceptedFiles) => {
     const newFiles = acceptedFiles.map((file) =>
@@ -54,27 +55,34 @@ const handleAnalyzeClick = async () => {
     const currentFile = files[currentIndex];
     const formData = new FormData();
     formData.append("file", currentFile);
-    formData.append("context", userPrompt || "Analyze the image and provide feedback.");
 
-    setLoading(true); 
+    setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/analyze-image", {
+      const uploadResponse = await fetch(`${BASE_API_URL}/upload-image`, {
         method: "POST",
-        body: formData, 
+        body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
+      if (!uploadResponse.ok) {
+        throw new Error(`Upload Error: ${uploadResponse.statusText}`);
       }
 
-      const data = await response.json();
-      setImageDescription(data.description || "No description available.");
+      const analyzeResponse = await fetch(`${BASE_API_URL}/analyze-image`, {
+        method: "GET",
+      });
+
+      if (!analyzeResponse.ok) {
+        throw new Error(`Analyze Error: ${analyzeResponse.statusText}`);
+      }
+
+      const analysisData = await analyzeResponse.json();
+      setImageDescription(analysisData.description || "No description available.");
     } catch (error) {
-      console.error("Error sending image to the server", error);
+      console.error("Error uploading or analyzing image:", error);
       setImageDescription("Failed to analyze the image.");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   }
 };
