@@ -3,7 +3,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Main from "../mainPage/Main";
 import MobileWarning from "./MobileWarning";
-import "../public/styles.css"
+import "../styles/styles.css"
 
 function App() {
   const isMobile = /Mobi|Android/i.test(navigator.userAgent);
