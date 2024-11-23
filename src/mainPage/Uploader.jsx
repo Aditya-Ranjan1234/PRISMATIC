@@ -116,8 +116,12 @@ const handleAnalyzeClick = async () => {
               </button>
               <div className="image-description-container">
                 <div className="prompt-text">
-                  {imageDescription || "Image Description"}
-                </div>
+  {loading ? (
+    <div className="loading-spinner"></div>
+  ) : (
+    imageDescription || "Image Description"
+  )}
+</div>
                 <input
                   type="text"
                   value={userPrompt}
