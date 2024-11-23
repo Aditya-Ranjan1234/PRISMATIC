@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../public/Header.css";
+import "../styles/Header.css";
 import RandomIcons from "../../src/RandomIcons";
 
 function Header() {
