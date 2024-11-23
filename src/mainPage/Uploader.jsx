@@ -8,6 +8,7 @@ function Uploader() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userPrompt, setUserPrompt] = useState("");
   const [imageDescription, setImageDescription] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const onDrop = useCallback((acceptedFiles) => {
     const newFiles = acceptedFiles.map((file) =>
@@ -48,12 +49,14 @@ function Uploader() {
     setUserPrompt(e.target.value);
   };
 
-  const handleAnalyzeClick = async () => {
+const handleAnalyzeClick = async () => {
   if (files.length > 0) {
     const currentFile = files[currentIndex];
     const formData = new FormData();
-    formData.append("file", currentFile); 
-    formData.append("context", userPrompt || "Analyze the image and provide feedback."); 
+    formData.append("file", currentFile);
+    formData.append("context", userPrompt || "Analyze the image and provide feedback.");
+
+    setLoading(true); 
 
     try {
       const response = await fetch("http://localhost:8000/analyze-image", {
@@ -70,6 +73,8 @@ function Uploader() {
     } catch (error) {
       console.error("Error sending image to the server", error);
       setImageDescription("Failed to analyze the image.");
+    } finally {
+      setLoading(false); 
     }
   }
 };
