@@ -9,7 +9,7 @@ function Uploader() {
   const [userPrompt, setUserPrompt] = useState("");
   const [imageDescription, setImageDescription] = useState("");
   const [loading, setLoading] = useState(false);
-  const BASE_API_URL = "c3f4-103-213-211-203.ngrok-free.app"; 
+  const BASE_API_URL = "https://c3f4-103-213-211-203.ngrok-free.app"; 
 
   const onDrop = useCallback((acceptedFiles) => {
     const newFiles = acceptedFiles.map((file) =>
