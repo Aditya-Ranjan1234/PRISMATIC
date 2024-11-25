@@ -64,6 +64,8 @@ function Uploader() {
           body: formData,
         });
 
+        console.log("Sending request to:", `${BASE_API_URL}/upload-image`);
+
         if (!uploadResponse.ok) {
           throw new Error(`Upload Error: ${uploadResponse.statusText}`);
         }
