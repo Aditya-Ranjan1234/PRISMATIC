@@ -7,8 +7,8 @@ function Uploader() {
   const [isBoxVisible, setBoxVisible] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userPrompt, setUserPrompt] = useState("");
-  const [imageDescription, setImageDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imageDescriptions, setImageDescriptions] = useState({});
   const BASE_API_URL = "https://7988-103-213-211-203.ngrok-free.app"; 
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -77,35 +77,44 @@ function Uploader() {
     }
   };
 
- const handleAnalyzeClick = async () => {
-  if (files.length > 0) {
-    const currentFile = files[currentIndex];
+  const handleAnalyzeClick = async () => {
+    if (files.length > 0) {
+      const currentFile = files[currentIndex];
 
-    setLoading(true);
+      setLoading(true);
 
-    try {
-      const analyzeResponse = await fetch(`${BASE_API_URL}/analyze-image`, {
-        method: "GET",
-        headers: new Headers({
-          "ngrok-skip-browser-warning": "69420",  
-        }),
-      });
+      try {
+        const analyzeResponse = await fetch(`${BASE_API_URL}/analyze-image`, {
+          method: "GET",
+          headers: new Headers({
+            "ngrok-skip-browser-warning": "69420",  
+          }),
+        });
 
-      if (!analyzeResponse.ok) {
-        throw new Error(`Analyze Error: ${analyzeResponse.statusText}`);
+        if (!analyzeResponse.ok) {
+          throw new Error(`Analyze Error: ${analyzeResponse.statusText}`);
+        }
+
+        const analysisData = await analyzeResponse.json();
+        setImageDescriptions((prevDescriptions) => ({
+          ...prevDescriptions,
+          [currentIndex]: analysisData.image_description || "No description available.",
+        }));
+      } catch (error) {
+        console.error("Error analyzing image:", error);
+        setImageDescriptions((prevDescriptions) => ({
+          ...prevDescriptions,
+          [currentIndex]: "Failed to analyze the image.",
+        }));
+      } finally {
+        setLoading(false);
       }
-
-      const analysisData = await analyzeResponse.json();
-      setImageDescription(analysisData.image_description || "No description available.");
-    } catch (error) {
-      console.error("Error analyzing image:", error);
-      setImageDescription("Failed to analyze the image.");
-    } finally {
-      setLoading(false);
     }
-  }
-};
+  };
 
+  const getDescriptionForCurrentImage = () => {
+    return imageDescriptions[currentIndex] || "Image Description";
+  };
 
   return (
     <div className="Uploader">
@@ -147,7 +156,7 @@ function Uploader() {
                   {loading ? (
                     <div className="loading-spinner"></div>
                   ) : (
-                    imageDescription || "Image Description"
+                    getDescriptionForCurrentImage()
                   )}
                 </div>
                 <input
