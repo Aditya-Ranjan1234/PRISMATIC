@@ -76,30 +76,33 @@ function Uploader() {
   };
 
   const handleAnalyzeClick = async () => {
-    if (files.length > 0) {
-      const currentFile = files[currentIndex];
+  if (files.length > 0) {
+    const currentFile = files[currentIndex];
 
-      setLoading(true);
+    setLoading(true);
 
-      try {
-        const analyzeResponse = await fetch(`${BASE_API_URL}/analyze-image`, {
-          method: "GET",
-        });
+    try {
+      const analyzeResponse = await fetch(`${BASE_API_URL}/analyze-image`, {
+        method: "GET",
+      });
 
-        if (!analyzeResponse.ok) {
-          throw new Error(`Analyze Error: ${analyzeResponse.statusText}`);
-        }
-
-        const analysisData = await analyzeResponse.json();
-        setImageDescription(analysisData.description || "No description available.");
-      } catch (error) {
-        console.error("Error analyzing image:", error);
-        setImageDescription("Failed to analyze the image.");
-      } finally {
-        setLoading(false);
+      if (!analyzeResponse.ok) {
+        throw new Error(`Analyze Error: ${analyzeResponse.statusText}`);
       }
+
+      const analysisData = await analyzeResponse.json();
+      
+      console.log("Full analysis response:", analysisData);
+
+      setImageDescription(JSON.stringify(analysisData, null, 2) || "No description available.");
+    } catch (error) {
+      console.error("Error analyzing image:", error);
+      setImageDescription("Failed to analyze the image.");
+    } finally {
+      setLoading(false);
     }
-  };
+  }
+};
 
   return (
     <div className="Uploader">
