@@ -50,42 +50,56 @@ function Uploader() {
     setUserPrompt(e.target.value);
   };
 
-const handleAnalyzeClick = async () => {
-  if (files.length > 0) {
-    const currentFile = files[currentIndex];
-    const formData = new FormData();
-    formData.append("file", currentFile);
+  const handleUploadClick = async () => {
+    if (files.length > 0) {
+      const currentFile = files[currentIndex];
+      const formData = new FormData();
+      formData.append("file", currentFile);
 
-    setLoading(true);
+      setLoading(true);
 
-    try {
-      const uploadResponse = await fetch(`${BASE_API_URL}/upload-image`, {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const uploadResponse = await fetch(`${BASE_API_URL}/upload-image`, {
+          method: "POST",
+          body: formData,
+        });
 
-      if (!uploadResponse.ok) {
-        throw new Error(`Upload Error: ${uploadResponse.statusText}`);
+        if (!uploadResponse.ok) {
+          throw new Error(`Upload Error: ${uploadResponse.statusText}`);
+        }
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      } finally {
+        setLoading(false);
       }
-
-      const analyzeResponse = await fetch(`${BASE_API_URL}/analyze-image`, {
-        method: "GET",
-      });
-
-      if (!analyzeResponse.ok) {
-        throw new Error(`Analyze Error: ${analyzeResponse.statusText}`);
-      }
-
-      const analysisData = await analyzeResponse.json();
-      setImageDescription(analysisData.description || "No description available.");
-    } catch (error) {
-      console.error("Error uploading or analyzing image:", error);
-      setImageDescription("Failed to analyze the image.");
-    } finally {
-      setLoading(false);
     }
-  }
-};
+  };
+
+  const handleAnalyzeClick = async () => {
+    if (files.length > 0) {
+      const currentFile = files[currentIndex];
+
+      setLoading(true);
+
+      try {
+        const analyzeResponse = await fetch(`${BASE_API_URL}/analyze-image`, {
+          method: "GET",
+        });
+
+        if (!analyzeResponse.ok) {
+          throw new Error(`Analyze Error: ${analyzeResponse.statusText}`);
+        }
+
+        const analysisData = await analyzeResponse.json();
+        setImageDescription(analysisData.description || "No description available.");
+      } catch (error) {
+        console.error("Error analyzing image:", error);
+        setImageDescription("Failed to analyze the image.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   return (
     <div className="Uploader">
@@ -124,12 +138,12 @@ const handleAnalyzeClick = async () => {
               </button>
               <div className="image-description-container">
                 <div className="prompt-text">
-  {loading ? (
-    <div className="loading-spinner"></div>
-  ) : (
-    imageDescription || "Image Description"
-  )}
-</div>
+                  {loading ? (
+                    <div className="loading-spinner"></div>
+                  ) : (
+                    imageDescription || "Image Description"
+                  )}
+                </div>
                 <input
                   type="text"
                   value={userPrompt}
@@ -143,9 +157,14 @@ const handleAnalyzeClick = async () => {
                 >
                   &times;
                 </button>
-                <button onClick={handleAnalyzeClick} className="analyze-button">
-                  Analyze Image
-                </button>
+                <div className="button-container">
+                  <button onClick={handleUploadClick} className="upload-button">
+                    Upload
+                  </button>
+                  <button onClick={handleAnalyzeClick} className="analyze-button">
+                    Analyze
+                  </button>
+                </div>
               </div>
             </div>
           )}
