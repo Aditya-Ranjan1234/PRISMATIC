@@ -1,24 +1,25 @@
 {
   "name": "using-pre-built-react-components-completed",
   "version": "1.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "A React application with MUI and FontAwesome integration.",
+  "keywords": ["react", "mui", "fontawesome", "dropzone", "image-uploader"],
+  "homepage": ".", 
   "main": "src/index.js",
   "dependencies": {
-    "@mui/material": "^5.0.0",
-    "@mui/icons-material": "^5.0.0",
+    "@mui/material": "^5.15.8",
+    "@mui/icons-material": "^5.15.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "^5.0.0",
-    "uuid": "3.3.3",
-    "react-dropzone": "14.2.9",
-    "react-router-dom": "^5.3.0",
-    "@fortawesome/free-solid-svg-icons": "6.6.0",
-    "@fortawesome/react-fontawesome": "0.2.2",
-    "@fortawesome/fontawesome-svg-core": "6.6.0"
+    "react-scripts": "^5.0.1",
+    "uuid": "^9.0.1",
+    "react-dropzone": "^14.2.9",
+    "react-router-dom": "^6.15.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@fortawesome/fontawesome-svg-core": "^6.6.0"
   },
   "devDependencies": {
-    "typescript": "3.3.3"
+    "typescript": "^5.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
