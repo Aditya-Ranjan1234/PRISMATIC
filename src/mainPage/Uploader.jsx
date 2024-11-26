@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import "../styles/Uploader.css";
+import "../../public/Uploader.css";
 
 function Uploader() {
   const [files, setFiles] = useState([]);
@@ -9,7 +9,13 @@ function Uploader() {
   const [userPrompt, setUserPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const [imageDescriptions, setImageDescriptions] = useState({});
-  const BASE_API_URL = "https://7988-103-213-211-203.ngrok-free.app"; 
+  const [trackableInfo, setTrackableInfo] = useState({});
+  const [caption, setCaption] = useState("");
+  const [genre, setGenre] = useState("");
+  const [currentDescriptionPage, setCurrentDescriptionPage] =
+    useState("image_description");
+  const BASE_API_URL =
+    "https://33f7-2401-4900-65cf-ef8b-7c82-6b36-5ae7-536f.ngrok-free.app";
 
   const onDrop = useCallback((acceptedFiles) => {
     const newFiles = acceptedFiles.map((file) =>
@@ -64,8 +70,6 @@ function Uploader() {
           body: formData,
         });
 
-        console.log("Sending request to:", `${BASE_API_URL}/upload-image`);
-
         if (!uploadResponse.ok) {
           throw new Error(`Upload Error: ${uploadResponse.statusText}`);
         }
@@ -79,15 +83,13 @@ function Uploader() {
 
   const handleAnalyzeClick = async () => {
     if (files.length > 0) {
-      const currentFile = files[currentIndex];
-
       setLoading(true);
 
       try {
         const analyzeResponse = await fetch(`${BASE_API_URL}/analyze-image`, {
           method: "GET",
           headers: new Headers({
-            "ngrok-skip-browser-warning": "69420",  
+            "ngrok-skip-browser-warning": "69420",
           }),
         });
 
@@ -98,7 +100,13 @@ function Uploader() {
         const analysisData = await analyzeResponse.json();
         setImageDescriptions((prevDescriptions) => ({
           ...prevDescriptions,
-          [currentIndex]: analysisData.image_description || "No description available.",
+          [currentIndex]:
+            analysisData.image_description || "No description available.",
+        }));
+        setTrackableInfo((prevTrackable) => ({
+          ...prevTrackable,
+          [currentIndex]:
+            analysisData.trackable || "No trackable info available.",
         }));
       } catch (error) {
         console.error("Error analyzing image:", error);
@@ -106,14 +114,52 @@ function Uploader() {
           ...prevDescriptions,
           [currentIndex]: "Failed to analyze the image.",
         }));
+        setTrackableInfo((prevTrackable) => ({
+          ...prevTrackable,
+          [currentIndex]: "Failed to retrieve trackable info.",
+        }));
       } finally {
         setLoading(false);
       }
     }
   };
 
-  const getDescriptionForCurrentImage = () => {
-    return imageDescriptions[currentIndex] || "Image Description";
+  const handleGenerateCaptionClick = async () => {
+    if (files.length > 0) {
+      const currentFile = files[currentIndex];
+      try {
+        const captionResponse = await fetch(
+          `${BASE_API_URL}/generate-caption-genre`,
+          {
+            method: "POST",
+            body: JSON.stringify({ context: userPrompt }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!captionResponse.ok) {
+          throw new Error(
+            `Caption Generation Error: ${captionResponse.statusText}`
+          );
+        }
+        const captionData = await captionResponse.json();
+        setCaption(captionData.Caption || "No caption available.");
+        setGenre(captionData.genre || "Unknown");
+      } catch (error) {
+        console.error("Error generating caption:", error);
+      }
+    }
+  };
+
+  const getDescriptionForCurrentPage = () => {
+    if (currentDescriptionPage === "image_description") {
+      return (
+        imageDescriptions[currentIndex] || "Image Description not available."
+      );
+    } else if (currentDescriptionPage === "trackable") {
+      return trackableInfo[currentIndex] || "Trackable info not available.";
+    }
   };
 
   return (
@@ -152,34 +198,88 @@ function Uploader() {
                 &#8250;
               </button>
               <div className="image-description-container">
-                <div className="prompt-text">
-                  {loading ? (
-                    <div className="loading-spinner"></div>
-                  ) : (
-                    getDescriptionForCurrentImage()
-                  )}
+                <div className="description-content">
+                  <p>
+                    {loading ? "Loading..." : getDescriptionForCurrentPage()}
+                  </p>
+                  <button
+                    className="toggle-description-button"
+                    onClick={() =>
+                      setCurrentDescriptionPage((prevPage) =>
+                        prevPage === "image_description"
+                          ? "trackable"
+                          : "image_description"
+                      )
+                    }
+                  >
+                    {currentDescriptionPage === "image_description"
+                      ? "Next ➡️"
+                      : "⬅️ Back"}
+                  </button>
                 </div>
-                <input
-                  type="text"
-                  value={userPrompt}
-                  onChange={handlePromptChange}
-                  placeholder="Type your prompt here"
-                  className="user-input"
-                />
+                <div className="button-container">
+                  <button onClick={handleUploadClick} className="upload-button">
+                    Upload
+                  </button>
+                  <button
+                    onClick={handleAnalyzeClick}
+                    className="analyze-button"
+                  >
+                    Analyze
+                  </button>
+                </div>
+                <div className="prompt-input">
+                  <input
+                    type="text"
+                    value={userPrompt}
+                    onChange={handlePromptChange}
+                    placeholder="Type your prompt here"
+                    className="user-input"
+                  />
+                  <button
+                    onClick={handleGenerateCaptionClick}
+                    className="generate-caption-button"
+                  >
+                    Generate Caption
+                  </button>
+                </div>
+                <div className="caption-container">
+                  <input
+                    type="text"
+                    value={caption}
+                    placeholder="Generated Caption"
+                    className="caption-input"
+                    readOnly
+                    onClick={() => {
+                      if (caption) {
+                        navigator.clipboard
+                          .writeText(caption)
+                          .then(() => {
+                            alert("Caption copied to clipboard!");
+                          })
+                          .catch((err) => {
+                            console.error("Failed to copy caption:", err);
+                          });
+                      } else {
+                        alert("No caption available to copy!");
+                      }
+                    }}
+                  />
+                  <input
+                    type="text"
+                    value={genre}
+                    placeholder="Genre"
+                    className="genre-input"
+                    readOnly
+                  />
+                </div>
+
                 <button
                   onClick={() => removeFile(currentIndex)}
                   className="remove-button"
                 >
                   &times;
                 </button>
-                <div className="button-container">
-                  <button onClick={handleUploadClick} className="upload-button">
-                    Upload
-                  </button>
-                  <button onClick={handleAnalyzeClick} className="analyze-button">
-                    Analyze
-                  </button>
-                </div>
               </div>
             </div>
           )}
