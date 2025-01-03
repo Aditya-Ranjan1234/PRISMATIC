@@ -38,6 +38,13 @@ PRISMATIC addresses this critical need by:
   - Utilizes tools like **LlamaIndex** and **Ollama cpp** for content analysis.
   - Leverages dynamic learning to improve suggestions based on interactions.
 
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+  <img src="media/Screenshot (93).png" width="100%">
+  <img src="media/Screenshot (125).png" width="100%">
+  <img src="media/Screenshot (124).png" width="100%">
+  <img src="media/Screenshot (123).png" width="100%">
+</div>
+
 ## Advantages of PRISMATIC
  - **Comprehensive Privacy Protection:** Ensures secure sharing by redacting sensitive information across audio, text, images, and captions.
  - **Enhanced User Engagement:** Delivers personalized suggestions to make posts interactive and appealing.
