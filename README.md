@@ -39,7 +39,7 @@ PRISMATIC addresses this critical need by:
   - Leverages dynamic learning to improve suggestions based on interactions.
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-  <img src="media/Screenshot (93).png" width="100%">
+  <img src="media/initial.jpg" width="100%">
   <img src="media/Screenshot (125).png" width="100%">
   <img src="media/Screenshot (124).png" width="100%">
   <img src="media/Screenshot (123).png" width="100%">
